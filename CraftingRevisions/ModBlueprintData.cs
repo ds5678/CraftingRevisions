@@ -15,13 +15,13 @@ namespace CraftingRevisions
 		/// <summary>
 		/// The name of each gear needed to craft this item (e.g. GEAR_Line)
 		/// </summary>
-		public string[] RequiredGear;
+		public string[] RequiredGear = new string[0];
 
 		/// <summary>
 		/// How many of each item are required? <br/>
 		/// This list has to match the RequiredGear list.
 		/// </summary>
-		public int[] RequiredGearUnits;
+		public int[] RequiredGearUnits = new int[0];
 
 		/// <summary>
 		/// How many liters of kerosene are required?
@@ -114,10 +114,10 @@ namespace CraftingRevisions
 
 		internal void PreValidate()
 		{
-			if (RequiredGear == null || RequiredGear.Length == 0)
+			if (RequiredGear == null)
 				throw new InvalidBlueprintException($"RequiredGear must be set on '{GetName()}'");
 
-			if (RequiredGearUnits == null || RequiredGearUnits.Length == 0)
+			if (RequiredGearUnits == null)
 				throw new InvalidBlueprintException($"RequiredGearUnits must be set on '{GetName()}'");
 
 			if (RequiredGear.Length != RequiredGearUnits.Length)
