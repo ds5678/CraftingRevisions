@@ -63,7 +63,12 @@ namespace CraftingRevisions
 
 		private static void ValidateBlueprint(ModBlueprintData modBlueprint)
 		{
-			try
+            if (modBlueprint is null)
+            {
+                throw new ArgumentNullException(nameof(modBlueprint));
+            }
+
+            try
 			{
 				GetItem<GearItem>(modBlueprint.CraftedResult);
 
@@ -81,7 +86,7 @@ namespace CraftingRevisions
 			}
 			catch (Exception e)
 			{
-				throw new ArgumentException($"Validation of blueprint '{modBlueprint.GetName()}' failed: {e.Message}\nThe blueprint may be out-of-date or installed incorrectly.");
+				throw new ArgumentException($"Validation of blueprint '{modBlueprint.GetName()}' failed. The blueprint may be out-of-date or installed incorrectly.\n{e.Message}", e);
 			}
 		}
 
@@ -98,7 +103,7 @@ namespace CraftingRevisions
 
 		internal static T GetItem<T>(string name) where T : UnityEngine.Component
 		{
-			GameObject gameObject = Resources.Load(name).TryCast<GameObject>();
+			GameObject gameObject = Resources.Load(name)?.TryCast<GameObject>();
 			if (gameObject == null)
 			{
 				throw new ArgumentException($"Could not load '{name}'.");
