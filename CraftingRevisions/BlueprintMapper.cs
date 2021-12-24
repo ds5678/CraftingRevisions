@@ -63,9 +63,9 @@ namespace CraftingRevisions
 
 		private static void ValidateBlueprint(ModBlueprintData modBlueprint)
 		{
-            if (modBlueprint is null)
+            if (modBlueprint == null)
             {
-                throw new ArgumentNullException(nameof(modBlueprint));
+                throw new ArgumentNullException(nameof(modBlueprint), "Blueprint cannot be null");
             }
 
             try
@@ -101,18 +101,29 @@ namespace CraftingRevisions
 			else return array;
 		}
 
+		/// <summary>
+		/// Get a component from an item
+		/// </summary>
+		/// <typeparam name="T">The Component type to get</typeparam>
+		/// <param name="name">The name of the object to load</param>
+		/// <returns>The first component with type T</returns>
 		internal static T GetItem<T>(string name) where T : UnityEngine.Component
 		{
-			GameObject gameObject = Resources.Load(name)?.TryCast<GameObject>();
-			if (gameObject == null)
+			UnityEngine.Object loadedObject = Resources.Load(name);
+			if (loadedObject == null)
 			{
 				throw new ArgumentException($"Could not load '{name}'.");
 			}
+			GameObject gameObject = loadedObject.TryCast<GameObject>();
+			if (gameObject == null)
+			{
+				throw new ArgumentException($"'{name}' is not a gameobject.");
+			}
 
-			T targetType = gameObject?.GetComponent<T>();
+			T targetType = gameObject.GetComponent<T>();
 			if (targetType == null)
 			{
-				throw new ArgumentException($"'{name}' is not a '{typeof(T).Name}'.");
+				throw new ArgumentException($"'{name}' does not have a component of type '{typeof(T).Name}'.");
 			}
 
 			return targetType;
