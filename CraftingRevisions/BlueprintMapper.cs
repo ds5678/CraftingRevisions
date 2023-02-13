@@ -156,8 +156,10 @@ namespace CraftingRevisions
 
 			for (int i = 0; i < names.Length; i++)
 			{
-				array[i].m_Item = GetItem<GearItem>(names[i]);
-				array[i].m_Count = counts[i];
+				BlueprintData.RequiredGearItem ri = new();
+				ri.m_Item = GetItem<GearItem>(names[i]);
+				ri.m_Count = counts[i];
+				array[i] = ri;
 			}
 
 			return array;
