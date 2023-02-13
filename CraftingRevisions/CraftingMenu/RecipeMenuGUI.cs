@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using Il2Cpp;
 
 namespace CraftingRevisions.CraftingMenu
 {

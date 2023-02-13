@@ -1,84 +1,54 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D7C79ACC-2DD9-4964-BC5A-B908DB0E90A6}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CraftingRevisions</RootNamespace>
-    <AssemblyName>CraftingRevisions</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Il2Cppmscorlib, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Il2CppSystem, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="MelonLoader, Version=0.5.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="ModSettings, Version=1.8.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="UnhollowerBaseLib, Version=0.4.16.2, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="BlueprintMapper.cs" />
-    <Compile Include="BlueprintManager.cs" />
-    <Compile Include="BuildInfo.cs" />
-    <Compile Include="Exceptions\InvalidBlueprintException.cs" />
-    <Compile Include="ModCraftingLocation.cs" />
-    <Compile Include="CraftingMenu\CraftingExtensions.cs" />
-    <Compile Include="CraftingMenu\CraftingMenuPatches.cs" />
-    <Compile Include="CraftingMenu\MethodReplacements.cs" />
-    <Compile Include="CraftingMenu\ModCraftingCategory.cs" />
-    <Compile Include="CraftingMenu\RecipeDisplayItem.cs" />
-    <Compile Include="CraftingMenu\RecipeMenuGUI.cs" />
-    <Compile Include="CraftingRevisionsMod.cs" />
-    <Compile Include="ModBlueprintData.cs" />
-    <Compile Include="Patches\GameManager_Awake.cs" />
-    <Compile Include="Patches\OverrideCraftingResultConditionPatches.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Recipes\ModIngredient.cs" />
-    <Compile Include="Recipes\ModPowderIngredient.cs" />
-    <Compile Include="Recipes\ModPowderIngredientType.cs" />
-    <Compile Include="Recipes\ModRecipe.cs" />
-    <Compile Include="Settings.cs" />
-    <Compile Include="ModSkillType.cs" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<!--This is an xml comment. Comments have no impact on compiling.-->
+
+	<PropertyGroup>
+		<!--This is the .NET version the mod will be compiled with. Don't change it.-->
+		<TargetFramework>net6.0</TargetFramework>
+
+		<!--This tells the compiler to use the latest C# version.-->
+		<LangVersion>Latest</LangVersion>
+
+		<!--This adds global usings for a few common System namespaces.-->
+		<ImplicitUsings>enable</ImplicitUsings>
+
+		<!--This enables nullable annotation and analysis. It's good coding form.-->
+		<Nullable>enable</Nullable>
+
+		<!--This tells the compiler to use assembly attributes instead of generating its own.-->
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+
+		<!--PDB files give line numbers in stack traces (errors). This is useful for debugging. There are 3 options:-->
+		<!--full has a pdb file created beside the dll.-->
+		<!--embedded has the pdb data embedded within the dll. This is useful because bug reports will then have line numbers.-->
+		<!--none skips creation of pdb data.-->
+		<DebugType>embedded</DebugType>
+	</PropertyGroup>
+	
+	<!--This is for NuGet.-->
+	<PropertyGroup>
+		<Authors>ds5678</Authors>
+		<Version>2.0.0.0</Version>
+		<AssemblyVersion>2.0.0.0</AssemblyVersion>
+		<PackageId>ds5678.Modding.TLD.CraftingRefivions</PackageId>
+		<PackageTags>MelonLoader Modding TLD Json Blueprint Crafting Utility Mod</PackageTags>
+		<RepositoryUrl>https://github.com/ds5678/CraftingRevisions</RepositoryUrl>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<RepositoryType>git</RepositoryType>
+		<PackageProjectUrl>https://github.com/ds5678/CraftingRevisions</PackageProjectUrl>
+		<Description>Library for The Long Dark that improves the crafting system.</Description>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<DocumentationFile>bin\CraftingRefivions.xml</DocumentationFile>
+		<NoWarn>1591</NoWarn>
+	</PropertyGroup>
+
+	<!--This is the of packages that the mod references.-->
+	<ItemGroup>
+		<!--This package contains almost everything a person could possibly need to reference while modding.-->
+		<PackageReference Include="ds5678.Modding.TLD.Il2CppAssemblies.Windows" Version="2.6.0" />
+		<PackageReference Include="ds5678.Modding.TLD.ModSettings" Version="1.9.0" />
+		<!--The package version here in this template may be outdated and need to be updated. Visual Studio can update package versions automatically.-->
+		<!--If the mod references any other mods (such as ModSettings), that NuGet package will also need to be listed here.-->
+	</ItemGroup>
 </Project>

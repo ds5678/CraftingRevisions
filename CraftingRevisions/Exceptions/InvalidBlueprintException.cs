@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace CraftingRevisions.Exceptions
+﻿namespace CraftingRevisions.Exceptions
 {
 	public sealed class InvalidBlueprintException : Exception
 	{

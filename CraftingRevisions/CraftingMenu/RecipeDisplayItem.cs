@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Il2Cpp;
+using Il2CppTLD.Gear;
 using UnityEngine;
 
 namespace CraftingRevisions.CraftingMenu
@@ -49,21 +50,22 @@ namespace CraftingRevisions.CraftingMenu
 		{
 			this.m_Button.SetState(selected ? UIButtonColor.State.Hover : UIButtonColor.State.Normal, true);
 			this.m_Background.color = (selected ? this.m_Selected : this.m_Normal);
-			this.m_Root.color = global::Utils.GetColorWithAlpha(this.m_Root.color, this.m_CanCraftRecipe ? 1f : this.m_Disabled.a);
+			this.m_Root.color = Il2Cpp.Utils.GetColorWithAlpha(this.m_Root.color, this.m_CanCraftRecipe ? 1f : this.m_Disabled.a);
 		}
 
-		public void Setup(BlueprintItem bpi)
+		public void Setup(BlueprintData bpi)
 		{
-			Panel_Crafting panel_Crafting = InterfaceManager.m_Panel_Crafting;
+			Panel_Crafting panel_Crafting = InterfaceManager.GetPanel<Panel_Crafting>();
 			this.m_CanCraftRecipe = panel_Crafting.CanCraftBlueprint(bpi);
-			string name = bpi.m_CraftedResult.name.Replace("GEAR_", "ico_CraftItem__");
-			this.m_Icon.mainTexture = panel_Crafting.m_CraftingIconBundle.LoadAsset<Texture2D>(name);
+			#warning Icon loading has changed
+			//string name = bpi.m_CraftedResult.name.Replace("GEAR_", "ico_CraftItem__");
+			//this.m_Icon.mainTexture = panel_Crafting.m_CraftingIconBundle.LoadAsset<Texture2D>(name);
 			this.m_Icon.enabled = true;
 			this.m_DisplayName.text = bpi.GetDisplayedNameWithCount();
 			this.m_Available.enabled = this.m_CanCraftRecipe;
 			this.m_Unavailable.enabled = !this.m_CanCraftRecipe;
 			this.m_Background.color = this.m_Normal;
-			this.m_Root.color = global::Utils.GetColorWithAlpha(this.m_Root.color, this.m_CanCraftRecipe ? 1f : this.m_Disabled.a);
+			this.m_Root.color = Il2Cpp.Utils.GetColorWithAlpha(this.m_Root.color, this.m_CanCraftRecipe ? 1f : this.m_Disabled.a);
 		}
 
 		public UISprite m_Available;

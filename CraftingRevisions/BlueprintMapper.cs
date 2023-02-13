@@ -1,22 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Il2Cpp;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
+using Il2CppTLD.Gear;
 using UnityEngine;
 
 namespace CraftingRevisions
 {
 	internal static class BlueprintMapper
 	{
-		private static List<ModBlueprintData> blueprints = new List<ModBlueprintData>();
+		private static List<ModBlueprintData> blueprints = new();
 		internal static void MapBlueprint(ModBlueprintData modBlueprint)
 		{
-			BlueprintItem bpItem = GameManager.GetBlueprints().AddComponent<BlueprintItem>();
-			if (bpItem == null)
-			{
-				throw new NullReferenceException("Error creating Blueprint");
-			}
+			BlueprintData bpItem = new();
 
 			bpItem.m_DurationMinutes = modBlueprint.DurationMinutes;
-			bpItem.m_CraftingAudio = modBlueprint.CraftingAudio;
+			#warning BlueprintData.m_CraftingAudio is now Il2CppAK.Wwise.Event, no longer string
+			//bpItem.m_CraftingAudio = modBlueprint.CraftingAudio;
 
 			bpItem.m_RequiredCraftingLocation = TranslateEnumValue<CraftingLocation, ModCraftingLocation>(modBlueprint.RequiredCraftingLocation);
 			bpItem.m_RequiresLitFire = modBlueprint.RequiresLitFire;
@@ -34,18 +32,23 @@ namespace CraftingRevisions
 			}
 			bpItem.m_OptionalTools = NotNull(GetItems<ToolsItem>(modBlueprint.OptionalTools));
 
-			bpItem.m_RequiredGear = NotNull(GetItems<GearItem>(modBlueprint.RequiredGear));
-			bpItem.m_RequiredGearUnits = modBlueprint.RequiredGearUnits;
+			bpItem.m_RequiredGear = GetRequiredGearItems(modBlueprint.RequiredGear, modBlueprint.RequiredGearUnits);
+			#warning bpItem.m_RequiredGearUnits is obsolete - see GetRequiredGearItems()
+			//bpItem.m_RequiredGearUnits = modBlueprint.RequiredGearUnits; 
 			bpItem.m_KeroseneLitersRequired = modBlueprint.KeroseneLitersRequired;
 			bpItem.m_GunpowderKGRequired = modBlueprint.GunpowderKGRequired;
 
 			bpItem.m_AppliedSkill = TranslateEnumValue<SkillType, ModSkillType>(modBlueprint.AppliedSkill);
 			bpItem.m_ImprovedSkill = TranslateEnumValue<SkillType, ModSkillType>(modBlueprint.ImprovedSkill);
+
+			// add the blueprint
+			InterfaceManager.GetInstance().m_BlueprintManager.m_UserBlueprints.Add(bpItem);
+
 		}
 
 		internal static void MapBlueprints()
 		{
-			GameObject blueprintsManager = GameManager.GetBlueprints();
+			Il2CppTLD.Gear.BlueprintManager blueprintsManager = InterfaceManager.GetInstance().m_BlueprintManager;
 			if (blueprintsManager == null) return;
 
 			foreach (ModBlueprintData modBlueprint in blueprints)
@@ -63,12 +66,12 @@ namespace CraftingRevisions
 
 		private static void ValidateBlueprint(ModBlueprintData modBlueprint)
 		{
-            if (modBlueprint == null)
-            {
-                throw new ArgumentNullException(nameof(modBlueprint), "Blueprint cannot be null");
-            }
+			if (modBlueprint == null)
+			{
+				throw new ArgumentNullException(nameof(modBlueprint), "Blueprint cannot be null");
+			}
 
-            try
+			try
 			{
 				GetItem<GearItem>(modBlueprint.CraftedResult);
 
@@ -139,6 +142,26 @@ namespace CraftingRevisions
 			}
 
 			return result;
+		}
+		/// <summary>
+		/// was previously using GetItems()
+		/// </summary>
+		/// <param name="names"></param>
+		/// <param name="counts"></param>
+		/// <returns>Il2CppReferenceArray required by BlueprintData.m_RequiredGear</returns>
+		internal static Il2CppReferenceArray<BlueprintData.RequiredGearItem> GetRequiredGearItems(string[] names, int[] counts)
+		{
+			Il2CppReferenceArray<BlueprintData.RequiredGearItem> array = new BlueprintData.RequiredGearItem[names.Length];
+
+			for (int i = 0; i < names.Length; i++)
+			{
+				BlueprintData.RequiredGearItem ri = new();
+				ri.m_Item = GetItem<GearItem>(names[i]);
+				ri.m_Count = counts[i];
+				array[i] = ri;
+			}
+
+			return array;
 		}
 	}
 }

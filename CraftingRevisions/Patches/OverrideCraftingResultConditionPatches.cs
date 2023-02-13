@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using Il2Cpp;
 
 namespace ModComponent.Patches
 {
@@ -19,14 +20,14 @@ namespace ModComponent.Patches
 			WatchHandleCraftingSuccess.isExecuting = false;
 		}
 	}
-	[HarmonyPatch(typeof(PlayerManager), "InstantiateItemInPlayerInventoryInternal")]
+	[HarmonyPatch(typeof(PlayerManager), nameof(PlayerManager.InstantiateItemInPlayerInventory), new Type[] { typeof(GearItem), typeof(int), typeof(float), typeof(bool), typeof(bool) })]
 	internal static class PlayerManager_InstantiateItemInPlayerInventory
 	{
-		private static void Postfix(ref GearItem __result, float condition)
+		private static void Postfix(ref GearItem __result, float normalizedCondition)
 		{
-			if (WatchHandleCraftingSuccess.isExecuting && condition < 0)
+			if (WatchHandleCraftingSuccess.isExecuting && normalizedCondition < 0)
 			{
-				__result.m_CurrentHP = __result.m_MaxHP;
+				__result.CurrentHP = __result.GearItemData.m_MaxHP;
 			}
 		}
 	}

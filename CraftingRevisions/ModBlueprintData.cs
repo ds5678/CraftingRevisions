@@ -1,7 +1,5 @@
 ﻿using CraftingRevisions.Exceptions;
 using MelonLoader.TinyJSON;
-using System;
-using System.Linq;
 
 namespace CraftingRevisions
 {
