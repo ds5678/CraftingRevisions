@@ -152,17 +152,15 @@ namespace CraftingRevisions
 		/// <returns>Il2CppReferenceArray required by BlueprintData.m_RequiredGear</returns>
 		internal static Il2CppReferenceArray<BlueprintData.RequiredGearItem> GetRequiredGearItems(string[] names, int[] counts)
 		{
-			List<BlueprintData.RequiredGearItem> list = new();
+			Il2CppReferenceArray<BlueprintData.RequiredGearItem> array = new BlueprintData.RequiredGearItem[names.Length];
 
 			for (int i = 0; i < names.Length; i++)
 			{
-				BlueprintData.RequiredGearItem ri = new();
-				ri.m_Item = GetItem<GearItem>(names[i]);
-				ri.m_Count = counts[i];
-				list.Add(ri);
+				array[i].m_Item = GetItem<GearItem>(names[i]);
+				array[i].m_Count = counts[i];
 			}
 
-			return list.ToArray();
+			return array;
 		}
 	}
 }
