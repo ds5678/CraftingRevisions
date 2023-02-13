@@ -13,8 +13,7 @@ namespace CraftingRevisions
 			BlueprintData bpItem = new();
 
 			bpItem.m_DurationMinutes = modBlueprint.DurationMinutes;
-			// removed (temp) due to possibly moving to use UserBlueprintData
-			// BlueprintData.m_CraftingAudio is now Il2CppAK.Wwise.Event, no longer string
+			#warning BlueprintData.m_CraftingAudio is now Il2CppAK.Wwise.Event, no longer string
 			//bpItem.m_CraftingAudio = modBlueprint.CraftingAudio;
 
 			bpItem.m_RequiredCraftingLocation = TranslateEnumValue<CraftingLocation, ModCraftingLocation>(modBlueprint.RequiredCraftingLocation);
