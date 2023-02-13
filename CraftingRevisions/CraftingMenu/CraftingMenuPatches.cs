@@ -1,4 +1,6 @@
 ﻿using HarmonyLib;
+using Il2Cpp;
+using Il2CppTLD.Gear;
 using MelonLoader;
 
 namespace CraftingRevisions.CraftingMenu
@@ -20,7 +22,7 @@ namespace CraftingRevisions.CraftingMenu
 		[HarmonyPatch(typeof(Panel_Crafting), "ItemPassesFilter")]
 		internal static class Panel_Crafting_ItemPassesFilter
 		{
-			private static bool Prefix(Panel_Crafting __instance, BlueprintItem bpi, ref bool __result, ref bool __runOriginal)
+			private static bool Prefix(Panel_Crafting __instance, BlueprintData bpi, ref bool __result, ref bool __runOriginal)
 			{
 				if (!__runOriginal)
 					MelonLogger.Error("Another mod tried to disable Panel_Crafting.ItemPassesFilter");
@@ -70,10 +72,10 @@ namespace CraftingRevisions.CraftingMenu
 		[HarmonyPatch(typeof(CraftingRequirementQuantitySelect), "Enable")]
 		internal static class CraftingRequirementQuantitySelect_Enable
 		{
-			private static void Postfix(CraftingRequirementQuantitySelect __instance, BlueprintItem bpi)
+			private static void Postfix(CraftingRequirementQuantitySelect __instance, BlueprintData bp)
 			{
-				float keroseneNeeded = bpi.m_KeroseneLitersRequired;
-				float gunpowderNeeded = bpi.m_GunpowderKGRequired;
+				float keroseneNeeded = bp.m_KeroseneLitersRequired;
+				float gunpowderNeeded = bp.m_GunpowderKGRequired;
 				if (keroseneNeeded > 0)
 				{
 					int maxKeroseneUnits = (int)(GameManager.GetPlayerManagerComponent().GetTotalLiters(GearLiquidTypeEnum.Kerosene) / keroseneNeeded);

@@ -1,27 +1,29 @@
-﻿using UnityEngine;
+﻿using Il2Cpp;
+using Il2CppTLD.Gear;
+using UnityEngine;
 
 namespace CraftingRevisions.CraftingMenu
 {
 	internal static class MethodReplacements
 	{
-		public static bool ItemPassesFilter(Panel_Crafting __instance, BlueprintItem bpi)
+		public static bool ItemPassesFilter(Panel_Crafting __instance, BlueprintData bpi)
 		{
 			switch ((ModCraftingCategory)__instance.m_CurrentCategory)
 			{
 				case ModCraftingCategory.All:
 					return true;
 				case ModCraftingCategory.FireStarting:
-					return bpi.m_CraftedResult.PassesFilterType(GearTypeEnum.Firestarting);
+					return bpi.m_CraftedResult.IsGearType(GearType.Firestarting);
 				case ModCraftingCategory.FirstAid:
-					return bpi.m_CraftedResult.PassesFilterType(GearTypeEnum.FirstAid);
+					return bpi.m_CraftedResult.IsGearType(GearType.FirstAid);
 				case ModCraftingCategory.Clothing:
-					return bpi.m_CraftedResult.PassesFilterType(GearTypeEnum.Clothing);
+					return bpi.m_CraftedResult.IsGearType(GearType.Clothing);
 				case ModCraftingCategory.Tools:
-					return bpi.m_CraftedResult.PassesFilterType(GearTypeEnum.Tool) || bpi.m_CraftedResult.PassesFilterType(GearTypeEnum.Other);
+					return bpi.m_CraftedResult.IsGearType(GearType.Tool) || bpi.m_CraftedResult.IsGearType(GearType.Other);
 				case ModCraftingCategory.Materials:
-					return bpi.m_CraftedResult.PassesFilterType(GearTypeEnum.Material);
+					return bpi.m_CraftedResult.IsGearType(GearType.Material);
 				case ModCraftingCategory.Food:
-					return bpi.m_CraftedResult.PassesFilterType(GearTypeEnum.Food);
+					return bpi.m_CraftedResult.IsGearType(GearType.Food);
 				default:
 					return false;
 			}
@@ -35,7 +37,7 @@ namespace CraftingRevisions.CraftingMenu
 				return;
 			}
 			float menuMovementVertical;
-			if (global::Utils.IsGamepadActive())
+			if (global::Il2Cpp.Utils.IsGamepadActive())
 			{
 				if (InputManager.GetOpenActionsPanelPressed(__instance))
 				{
@@ -100,15 +102,15 @@ namespace CraftingRevisions.CraftingMenu
 							return;
 						}
 					}
-					menuMovementVertical = global::Utils.GetMenuMovementVertical(__instance, true, true);
+					menuMovementVertical = global::Il2Cpp.Utils.GetMenuMovementVertical(__instance, true, true);
 				}
 			}
 			else
 			{
 				float axisScrollWheel = InputManager.GetAxisScrollWheel(__instance);
 				int numBlueprintDisplays = __instance.m_BlueprintDisplays.Count; // 7
-				int numFilteredItems = __instance.m_FilteredBlueprintItems.Count; // total number of blueprints in that filtered list
-				if (!global::Utils.IsZero(axisScrollWheel, 0.0001f) && numFilteredItems > numBlueprintDisplays)
+				int numFilteredItems = __instance.m_FilteredBlueprints.Count; // total number of blueprints in that filtered list
+				if (!global::Il2Cpp.Utils.IsZero(axisScrollWheel, 0.0001f) && numFilteredItems > numBlueprintDisplays)
 				{
 					int maxChange = Mathf.Clamp(Settings.instance.numCraftingSteps, 1, numBlueprintDisplays);
 					int num = __instance.m_CurrentBlueprintDisplayOffset;
@@ -123,13 +125,13 @@ namespace CraftingRevisions.CraftingMenu
 					}
 					return;
 				}
-				menuMovementVertical = global::Utils.GetMenuMovementVertical(__instance, true, true);
+				menuMovementVertical = global::Il2Cpp.Utils.GetMenuMovementVertical(__instance, true, true);
 				if (__instance.m_CurrentNavArea != Panel_Crafting.NavArea.Blueprint)
 				{
 					__instance.SetNavigationArea(Panel_Crafting.NavArea.Blueprint);
 				}
 			}
-			if (!global::Utils.IsZero(menuMovementVertical, 0.0001f))
+			if (!global::Il2Cpp.Utils.IsZero(menuMovementVertical, 0.0001f))
 			{
 				__instance.HandleVerticalNavigation(menuMovementVertical);
 			}

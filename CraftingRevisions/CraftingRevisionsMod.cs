@@ -4,14 +4,11 @@ namespace CraftingRevisions
 {
 	internal class CraftingRevisionsMod : MelonMod
     {
-		public override void OnApplicationStart()
+		public override void OnInitializeMelon()
 		{
 			Settings.instance.AddToModSettings("Crafting Revisions");
-		}
+            BlueprintManager.RegisterPendingBlueprints();
+        }
 
-		public override void OnApplicationLateStart()
-		{
-			BlueprintManager.RegisterPendingBlueprints();
-		}
 	}
 }
