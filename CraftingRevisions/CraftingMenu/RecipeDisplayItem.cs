@@ -57,7 +57,7 @@ namespace CraftingRevisions.CraftingMenu
 		{
 			Panel_Crafting panel_Crafting = InterfaceManager.GetPanel<Panel_Crafting>();
 			this.m_CanCraftRecipe = panel_Crafting.CanCraftBlueprint(bpi);
-//			string name = bpi.m_CraftedResult.name.Replace("GEAR_", "ico_CraftItem__");
+			//			string name = bpi.m_CraftedResult.name.Replace("GEAR_", "ico_CraftItem__");
 			this.m_Icon.mainTexture = panel_Crafting.m_SelectedImage.mainTexture;
 			this.m_Icon.enabled = true;
 			this.m_DisplayName.text = bpi.GetDisplayedNameWithCount();

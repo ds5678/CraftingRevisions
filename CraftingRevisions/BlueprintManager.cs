@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CraftingRevisions
+﻿namespace CraftingRevisions
 {
 	public static class BlueprintManager
 	{
