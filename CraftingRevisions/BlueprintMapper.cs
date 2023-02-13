@@ -34,7 +34,7 @@ namespace CraftingRevisions
 			bpItem.m_OptionalTools = NotNull(GetItems<ToolsItem>(modBlueprint.OptionalTools));
 
 			bpItem.m_RequiredGear = GetRequiredGearItems(modBlueprint.RequiredGear, modBlueprint.RequiredGearUnits);
-			// obsolete, see GetRequiredGearItems()
+			#warning bpItem.m_RequiredGearUnits is obsolete - see GetRequiredGearItems()
 			//bpItem.m_RequiredGearUnits = modBlueprint.RequiredGearUnits; 
 			bpItem.m_KeroseneLitersRequired = modBlueprint.KeroseneLitersRequired;
 			bpItem.m_GunpowderKGRequired = modBlueprint.GunpowderKGRequired;
