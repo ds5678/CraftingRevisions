@@ -50,7 +50,7 @@ namespace CraftingRevisions.CraftingMenu
 		{
 			this.m_Button.SetState(selected ? UIButtonColor.State.Hover : UIButtonColor.State.Normal, true);
 			this.m_Background.color = (selected ? this.m_Selected : this.m_Normal);
-			this.m_Root.color = global::Il2Cpp.Utils.GetColorWithAlpha(this.m_Root.color, this.m_CanCraftRecipe ? 1f : this.m_Disabled.a);
+			this.m_Root.color = Il2Cpp.Utils.GetColorWithAlpha(this.m_Root.color, this.m_CanCraftRecipe ? 1f : this.m_Disabled.a);
 		}
 
 		public void Setup(BlueprintData bpi)
@@ -64,7 +64,7 @@ namespace CraftingRevisions.CraftingMenu
 			this.m_Available.enabled = this.m_CanCraftRecipe;
 			this.m_Unavailable.enabled = !this.m_CanCraftRecipe;
 			this.m_Background.color = this.m_Normal;
-			this.m_Root.color = global::Il2Cpp.Utils.GetColorWithAlpha(this.m_Root.color, this.m_CanCraftRecipe ? 1f : this.m_Disabled.a);
+			this.m_Root.color = Il2Cpp.Utils.GetColorWithAlpha(this.m_Root.color, this.m_CanCraftRecipe ? 1f : this.m_Disabled.a);
 		}
 
 		public UISprite m_Available;

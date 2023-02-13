@@ -37,7 +37,7 @@ namespace CraftingRevisions.CraftingMenu
 				return;
 			}
 			float menuMovementVertical;
-			if (global::Il2Cpp.Utils.IsGamepadActive())
+			if (Il2Cpp.Utils.IsGamepadActive())
 			{
 				if (InputManager.GetOpenActionsPanelPressed(__instance))
 				{
@@ -102,7 +102,7 @@ namespace CraftingRevisions.CraftingMenu
 							return;
 						}
 					}
-					menuMovementVertical = global::Il2Cpp.Utils.GetMenuMovementVertical(__instance, true, true);
+					menuMovementVertical = Il2Cpp.Utils.GetMenuMovementVertical(__instance, true, true);
 				}
 			}
 			else
@@ -110,7 +110,7 @@ namespace CraftingRevisions.CraftingMenu
 				float axisScrollWheel = InputManager.GetAxisScrollWheel(__instance);
 				int numBlueprintDisplays = __instance.m_BlueprintDisplays.Count; // 7
 				int numFilteredItems = __instance.m_FilteredBlueprints.Count; // total number of blueprints in that filtered list
-				if (!global::Il2Cpp.Utils.IsZero(axisScrollWheel, 0.0001f) && numFilteredItems > numBlueprintDisplays)
+				if (!Il2Cpp.Utils.IsZero(axisScrollWheel, 0.0001f) && numFilteredItems > numBlueprintDisplays)
 				{
 					int maxChange = Mathf.Clamp(Settings.instance.numCraftingSteps, 1, numBlueprintDisplays);
 					int num = __instance.m_CurrentBlueprintDisplayOffset;
@@ -125,13 +125,13 @@ namespace CraftingRevisions.CraftingMenu
 					}
 					return;
 				}
-				menuMovementVertical = global::Il2Cpp.Utils.GetMenuMovementVertical(__instance, true, true);
+				menuMovementVertical = Il2Cpp.Utils.GetMenuMovementVertical(__instance, true, true);
 				if (__instance.m_CurrentNavArea != Panel_Crafting.NavArea.Blueprint)
 				{
 					__instance.SetNavigationArea(Panel_Crafting.NavArea.Blueprint);
 				}
 			}
-			if (!global::Il2Cpp.Utils.IsZero(menuMovementVertical, 0.0001f))
+			if (!Il2Cpp.Utils.IsZero(menuMovementVertical, 0.0001f))
 			{
 				__instance.HandleVerticalNavigation(menuMovementVertical);
 			}
