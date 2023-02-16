@@ -11,7 +11,11 @@ namespace CraftingRevisions
 
 		public override void OnApplicationLateStart()
 		{
-			BlueprintManager.RegisterPendingBlueprints();
+			// Load a couple of TEST user json blueprints
+			// (blueprint_1 is the old format | blueprint_2 is the new UserBlueprintData format)
+			BlueprintManager.AddBlueprintFromJson(TestBlueprints.blueprint_1, false);
+			BlueprintManager.AddBlueprintFromJson(TestBlueprints.blueprint_2, true);
+
 		}
 
 	}

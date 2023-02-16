@@ -5,6 +5,8 @@
 		private static readonly List<ModBlueprintData> pendingBlueprints = new List<ModBlueprintData>();
 		private static bool registeredPendingBlueprints;
 
+		public static HashSet<string> jsonUserBlueprints = new();
+
 		internal static void RegisterPendingBlueprints()
 		{
 			foreach (var blueprint in pendingBlueprints)
@@ -35,7 +37,12 @@
 				throw new ArgumentException("Blueprint text contains no information", nameof(text));
 			}
 
-			AddBlueprint(ModBlueprintData.ParseFromJson(text), validateEarly);
+			// add the blueprint to the HasSet
+			if (!jsonUserBlueprints.Contains(text))
+			{
+				jsonUserBlueprints.Add(text);
+			}
 		}
+
 	}
 }
