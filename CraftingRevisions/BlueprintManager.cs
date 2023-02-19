@@ -5,7 +5,7 @@
 		private static readonly List<ModBlueprintData> pendingBlueprints = new List<ModBlueprintData>();
 		private static bool registeredPendingBlueprints;
 
-		public static HashSet<string> jsonUserBlueprints = new();
+		internal static HashSet<string> jsonUserBlueprints = new();
 
 		internal static void RegisterPendingBlueprints()
 		{
@@ -38,11 +38,7 @@
 			}
 
 			// add the blueprint to the HasSet
-			if (!jsonUserBlueprints.Contains(text))
-			{
-				jsonUserBlueprints.Add(text);
-			}
+			jsonUserBlueprints.Add(text);
 		}
-
 	}
 }
