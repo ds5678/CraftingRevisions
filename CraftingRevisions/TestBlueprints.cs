@@ -1,34 +1,34 @@
 ﻿
 // just some json blueprints for testing 
-#warning - This file and references to it to be removed before merge&release (purely here for testing)
+#warning - This file and references to it to be removed before merge&release (solely here for testing)
 
 namespace CraftingRevisions
 {
 	internal class TestBlueprints
 	{
 
-		public static string blueprint_1 = """
-						{
-			    "Name": "Old_Prybar",
-			    "RequiredGear": ["GEAR_Cloth"],
-			    "RequiredGearUnits": [1],
-			    "KeroseneLitersRequired": 0,
-			    "GunpowderKGRequired": 0,
-			    "RequiredTool": "",
-			    "OptionalTools": [],
-			    "RequiredCraftingLocation": "Anywhere",
-			    "RequiresLitFire": false,
-			    "RequiresLight": false,
-			    "CraftedResult": "GEAR_Prybar",
-			    "CraftedResultCount": 1,
-			    "DurationMinutes": 15,
-			    "CraftingAudio": "PLAY_CraftingCloth",
-			    "AppliedSkill" : "None",
-			    "ImprovedSkill" : "None"
+		public const string blueprint_1 = """
+			{
+			"Name": "Old_Prybar",
+			"RequiredGear": ["GEAR_Cloth"],
+			"RequiredGearUnits": [1],
+			"KeroseneLitersRequired": 0,
+			"GunpowderKGRequired": 0,
+			"RequiredTool": "",
+			"OptionalTools": [],
+			"RequiredCraftingLocation": "Anywhere",
+			"RequiresLitFire": false,
+			"RequiresLight": false,
+			"CraftedResult": "GEAR_Prybar",
+			"CraftedResultCount": 1,
+			"DurationMinutes": 15,
+			"CraftingAudio": "PLAY_CraftingCloth",
+			"AppliedSkill" : "None",
+			"ImprovedSkill" : "None"
 			}
 			""";
 
-		public static string blueprint_2 = """
+		public const string blueprint_2 = """
 			{
 			"RequiredGear":[{"Item":"GEAR_Cloth","Count":1}],
 			"RequiredTool":"",
