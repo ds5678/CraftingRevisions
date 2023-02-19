@@ -1,5 +1,6 @@
 ﻿
 // just some json blueprints for testing 
+#warning - This file and references to it to be removed before merge&release (purely here for testing)
 
 namespace CraftingRevisions
 {
