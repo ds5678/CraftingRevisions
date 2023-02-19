@@ -29,7 +29,6 @@ namespace CraftingRevisions
 
 		public static string blueprint_2 = """
 			{
-			"Name":"UserBp_Prybar",
 			"RequiredGear":[{"Item":"GEAR_Cloth","Count":1}],
 			"RequiredTool":"",
 			"OptionalTools":[],
