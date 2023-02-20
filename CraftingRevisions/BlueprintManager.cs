@@ -1,4 +1,6 @@
-﻿namespace CraftingRevisions
+﻿using Il2Cpp;
+
+namespace CraftingRevisions
 {
 	public static class BlueprintManager
 	{
@@ -13,6 +15,25 @@
 
 			// add the blueprint to the HasSet
 			jsonUserBlueprints.Add(text);
+		}
+
+		public static Il2CppAK.Wwise.Event? MakeAudioEvent(string eventName)
+		{
+			if (eventName == null)
+			{
+				return null;
+			}
+			uint eventId = AkSoundEngine.GetIDFromString(eventName);
+			if (eventId <=0 || eventId  >= 4294967295)
+			{
+				return null;
+			}
+
+			Il2CppAK.Wwise.Event newEvent = new();
+			newEvent.WwiseObjectReference = new WwiseEventReference();
+			newEvent.WwiseObjectReference.objectName = eventName;
+			newEvent.WwiseObjectReference.id = eventId;
+			return newEvent;
 		}
 	}
 }
