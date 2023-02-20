@@ -11,13 +11,13 @@ namespace CraftingRevisions.Patches
 		private static void Postfix()
 		{
 			// call TLD LoadAllUserBlueprints
+#warning BlueprintManager.LoadAllUserBlueprints is not called by the game itself yet, we may need to remove this to prevent dupe recipes in the future.
 			InterfaceManager.m_Instance.m_BlueprintManager.LoadAllUserBlueprints();
 		}
 	}
 
 	// patched into postfix BlueprintManager.LoadAllUserBlueprints
 	// (BlueprintManager.RemoveUserBlueprints is not guaranteed to get called)
-#warning BlueprintManager.LoadAllUserBlueprints is also not called by the game itself yet, we may need to remove this to prevent dupe recipes in the future.
 	[HarmonyPatch(typeof(Il2CppTLD.Gear.BlueprintManager), nameof(Il2CppTLD.Gear.BlueprintManager.LoadAllUserBlueprints))]
 	internal class BlueprintManager_LoadAllUserBlueprints_Postfix
 	{
@@ -57,5 +57,4 @@ namespace CraftingRevisions.Patches
 			__runOriginal = false;
 		}
 	}
-
 }
