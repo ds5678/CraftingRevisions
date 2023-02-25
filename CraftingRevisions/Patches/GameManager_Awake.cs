@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using Il2Cpp;
 
 namespace CraftingRevisions.Patches
@@ -11,7 +11,6 @@ namespace CraftingRevisions.Patches
 		private static void Postfix()
 		{
 			// call TLD LoadAllUserBlueprints
-#warning BlueprintManager.LoadAllUserBlueprints is not called by the game itself yet, we may need to remove this to prevent dupe recipes in the future.
 			InterfaceManager.m_Instance.m_BlueprintManager.LoadAllUserBlueprints();
 		}
 	}
@@ -23,25 +22,28 @@ namespace CraftingRevisions.Patches
 	{
 		private static void Postfix(Il2CppTLD.Gear.BlueprintManager __instance)
 		{
+
 			// check we have a HasSet and it has contents
 			if (BlueprintManager.jsonUserBlueprints != null && BlueprintManager.jsonUserBlueprints.Count > 0)
 			{
 				// loop over the items
-				foreach (string jsonUserBlueprint in BlueprintManager.jsonUserBlueprints)
+				foreach (string jsonUserBlueprint in CraftingRevisions.BlueprintManager.jsonUserBlueprints)
 				{
+
 					// load the blueprint into the game
 					bool loaded = __instance.LoadUserBlueprint(jsonUserBlueprint);
 
 					if (loaded == false)
 					{
-						// implement validation here
-#warning TODO - work on loading validation if it fails
-
+						// WIP
+						//BlueprintManager.ValidateJsonBlueprint(jsonUserBlueprint);
 					}
 				}
 			}
 		}
 	}
+
+
 
 	// So these patches are to work around the fact that "UserBlueprintData.MakeRuntimeWwiseEvent" appears to be broken or unfinished
 	[HarmonyPatch(typeof(Il2CppTLD.Gear.UserBlueprintData), nameof(Il2CppTLD.Gear.UserBlueprintData.MakeRuntimeWwiseEvent), new Type[] { typeof(string) })]
@@ -57,4 +59,5 @@ namespace CraftingRevisions.Patches
 			__runOriginal = false;
 		}
 	}
+
 }

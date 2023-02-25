@@ -1,4 +1,8 @@
-﻿using Il2Cpp;
+﻿using CraftingRevisions.Exceptions;
+
+using Il2Cpp;
+using UnityEngine;
+using System.Reflection;
 
 namespace CraftingRevisions
 {
@@ -6,7 +10,7 @@ namespace CraftingRevisions
 	{
 		internal static HashSet<string> jsonUserBlueprints = new();
 
-		public static void AddBlueprintFromJson(string text, bool validateEarly)
+		public static void AddBlueprintFromJson(string text)
 		{
 			if (string.IsNullOrWhiteSpace(text))
 			{
@@ -17,23 +21,45 @@ namespace CraftingRevisions
 			jsonUserBlueprints.Add(text);
 		}
 
-		public static Il2CppAK.Wwise.Event? MakeAudioEvent(string eventName)
+		internal static Il2CppAK.Wwise.Event? MakeAudioEvent(string eventName)
 		{
 			if (eventName == null)
 			{
 				return null;
 			}
-			uint eventId = AkSoundEngine.GetIDFromString(eventName);
-			if (eventId <=0 || eventId  >= 4294967295)
+			uint eventId = GetAKEventIdFromString(eventName);
+			if (eventId == 0U)
 			{
 				return null;
 			}
 
 			Il2CppAK.Wwise.Event newEvent = new();
-			newEvent.WwiseObjectReference = new WwiseEventReference();
+			newEvent.WwiseObjectReference = ScriptableObject.CreateInstance<WwiseEventReference>();
 			newEvent.WwiseObjectReference.objectName = eventName;
 			newEvent.WwiseObjectReference.id = eventId;
 			return newEvent;
 		}
+
+		internal static uint GetAKEventIdFromString(string eventName)
+		{
+			Type type = typeof(Il2CppAK.EVENTS);
+			foreach (PropertyInfo prop in type.GetProperties(BindingFlags.Static | BindingFlags.Public | BindingFlags.Instance))
+			{
+				if (prop.Name.ToLower() == eventName.ToLower())
+				{
+					return Convert.ToUInt32(prop.GetValue(null)?.ToString());
+				}
+			}
+			return 0U;
+		}
+
+		internal static void ValidateJsonBlueprint(string json)
+		{
+			CraftingRevisions.UserBlueprintData testBluePrint = CraftingRevisions.UserBlueprintData.ParseFromJson(json);
+			testBluePrint.Validate();
+		}
+
 	}
+
+	
 }
