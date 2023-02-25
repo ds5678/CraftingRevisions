@@ -23,14 +23,17 @@ namespace CraftingRevisions
 
 		internal static Il2CppAK.Wwise.Event? MakeAudioEvent(string eventName)
 		{
-			if (eventName == null)
+			Il2CppAK.Wwise.Event emptyEvent = new();
+			emptyEvent.WwiseObjectReference = ScriptableObject.CreateInstance<WwiseEventReference>();
+
+			if (eventName == null || eventName == "")
 			{
-				return null;
+				return emptyEvent;
 			}
 			uint eventId = GetAKEventIdFromString(eventName);
 			if (eventId == 0U)
 			{
-				return null;
+				return emptyEvent;
 			}
 
 			Il2CppAK.Wwise.Event newEvent = new();
