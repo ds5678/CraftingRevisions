@@ -22,7 +22,7 @@ namespace CraftingRevisions
 		public string CraftedResult;
 
 		// Token: 0x04007046 RID: 28742
-		public int CraftedResultCount = 1;
+		public int CraftedResultCount = 0;
 
 		// Token: 0x04007047 RID: 28743
 		public int DurationMinutes = 0;
@@ -77,34 +77,36 @@ namespace CraftingRevisions
 
 		internal void Validate()
 		{
+			string exception = "";
 			if (RequiredGear == null)
-				throw new InvalidBlueprintException($"RequiredGear must be set on '{GetName()}'");
-			if (RequiredGear.Count <= 0)
-				throw new InvalidBlueprintException($"RequiredGear must not be empty on '{GetName()}'");
+				exception += $"\nRequiredGear must be set on '{GetName()}'";
+
+			if (RequiredGear != null && RequiredGear.Count <= 0)
+				exception += $"\nRequiredGear must not be empty on '{GetName()}'";
 
 			if (KeroseneLitersRequired < 0)
-				throw new InvalidBlueprintException($"KeroseneLitersRequired cannot be negative on '{GetName()}'");
+				exception += $"\nKeroseneLitersRequired cannot be negative on '{GetName()}'";
 
 			if (GunpowderKGRequired < 0)
-				throw new InvalidBlueprintException($"GunpowderKGRequired cannot be negative on '{GetName()}'");
+				exception += $"\nGunpowderKGRequired cannot be negative on '{GetName()}'";
 
 			if (string.IsNullOrWhiteSpace(CraftedResult))
-				throw new InvalidBlueprintException($"CraftedResult must be set on '{GetName()}'");
+				exception += $"\nCraftedResult must be set on '{GetName()}'";
 
 			if (CraftedResultCount < 1)
-				throw new InvalidBlueprintException($"CraftedResultCount cannot be less than 1 on '{GetName()}'");
+				exception += $"\nCraftedResultCount cannot be less than 1 on '{GetName()}'";
 
 			if (DurationMinutes < 0)
-				throw new InvalidBlueprintException($"DurationMinutes cannot be negative on '{GetName()}'");
+				exception += $"\nDurationMinutes cannot be negative on '{GetName()}'";
 
 			if (!IsValidEnumValue(RequiredCraftingLocation))
-				throw new InvalidBlueprintException($"Unsupported value {RequiredCraftingLocation} for RequiredCraftingLocation on '{GetName()}'");
+				exception += $"\nUnsupported value {RequiredCraftingLocation} for RequiredCraftingLocation on '{GetName()}'";
 
 			if (!IsValidEnumValue(AppliedSkill))
-				throw new InvalidBlueprintException($"Unsupported value {AppliedSkill} for AppliedSkill on '{GetName()}'");
+				exception += $"\nUnsupported value {AppliedSkill} for AppliedSkill on '{GetName()}'";
 
 			if (!IsValidEnumValue(ImprovedSkill))
-				throw new InvalidBlueprintException($"Unsupported value {ImprovedSkill} for RequiredCraftingLocation on '{GetName()}'");
+				exception += $"\nUnsupported value {ImprovedSkill} for RequiredCraftingLocation on '{GetName()}'";
 
 			if (RequiredGear != null && RequiredGear.Count > 0)
 			{
@@ -112,13 +114,15 @@ namespace CraftingRevisions
 				foreach (RequiredGearItem RequiredGearItem in RequiredGear)
 				{
 					if (RequiredGearItem.Item == null)
-						throw new InvalidBlueprintException($"RequiredGearItem[{i}].Item must be set on '{GetName()}'");
-					if (RequiredGearItem.Count == 1)
-						throw new InvalidBlueprintException($"RequiredGearItem[{i}].Count must be set on '{GetName()}'");
+						exception += $"\nRequiredGearItem[{i}].Item must be set on '{GetName()}'";
 					if (RequiredGearItem.Count < 1)
-						throw new InvalidBlueprintException($"RequiredGearItem[{i}].Count cannot be less than 1 on '{GetName()}'");
+						exception += $"\nRequiredGearItem[{i}].Count cannot be less than 1 on '{GetName()}'";
 					i++;
 				}
+			}
+			if (exception != null && exception != "")
+			{
+				throw new InvalidBlueprintException(exception);
 			}
 
 		}
@@ -170,60 +174,5 @@ namespace CraftingRevisions
 		AmmoWorkbench
 	}
 }
-
-
-
-
-	//public const string blueprint_1 = """
-	//		{
-	//		    "Name": "blueprint_bearLeggings",
-	//			"RequiredGear":[{"Item":"GEAR_BearHideDried","Count":1},{"Item":"GEAR_GutDried","Count":2}],
-	//			"RequiredTool":"GEAR_SewingKit",
-	//			"OptionalTools":["GEAR_HookAndLine"],
-	//			"CraftedResult":"GEAR_BearskinLeggings",
-	//			"CraftedResultCount":1,
-	//			"DurationMinutes":900,
-	//			"CraftingAudio":"Play_RepairingLeatherHide",
-	//			"KeroseneLitersRequired":0,
-	//			"GunpowderKGRequired":0,
-	//			"RequiresLight":false,
-	//			"Locked":false,
-	//			"IgnoreLockInSurvival":true,
-	//			"AppearsInStoryOnly":false,
-	//			"AppearsInSurvivalOnly":false,
-	//			"AppliedSkill":"None",
-	//			"ImprovedSkill":"None",
-	//			"RequiredCraftingLocation":"Workbench",
-	//			"RequiresLight":false,
-	//			"RequiresLitFire":false,
-	//			"CanIncreaseRepairSkill":false
-
-	//		}
-	//		""";
-
-	//public const string blueprint_2 = """
-	//		{
-	//		"RequiredGear":[{"Item":"GEAR_Cloth","Count":1}],
-	//		"RequiredTool":"",
-	//		"OptionalTools":[],
-	//		"CraftedResult":"GEAR_Prybar",
-	//		"CraftedResultCount":1,
-	//		"DurationMinutes":10,
-	//		"CraftingAudio":null,
-	//		"KeroseneLitersRequired":0,
-	//		"GunpowderKGRequired":0,
-	//		"RequiresLight":false,
-	//		"Locked":false,
-	//		"IgnoreLockInSurvival":true,
-	//		"AppearsInStoryOnly":false,
-	//		"AppearsInSurvivalOnly":false,
-	//		"AppliedSkill":"None",
-	//		"ImprovedSkill":"None",
-	//		"RequiredCraftingLocation":"Anywhere",
-	//		"RequiresLight":false,
-	//		"RequiresLitFire":false,
-	//		"CanIncreaseRepairSkill":false
-	//		}
-	//		""";
 
 

@@ -1,9 +1,4 @@
-﻿using CraftingRevisions.Exceptions;
-
-using Il2Cpp;
-using UnityEngine;
-using System.Reflection;
-
+﻿
 namespace CraftingRevisions
 {
 	public static class BlueprintManager
