@@ -3,7 +3,7 @@ using MelonLoader.TinyJSON;
 
 namespace CraftingRevisions
 {
-	public class UserBlueprintData
+	public class ModUserBlueprintData
 	{
 		/// <summary>
 		/// optional name, used for debugging
@@ -67,9 +67,9 @@ namespace CraftingRevisions
 		public bool CanIncreaseRepairSkill = false;
 
 		#region Json
-		public static UserBlueprintData ParseFromJson(string jsonText)
+		public static ModUserBlueprintData ParseFromJson(string jsonText)
 		{
-			return JSON.Load(jsonText).Make<UserBlueprintData>();
+			return JSON.Load(jsonText).Make<ModUserBlueprintData>();
 		}
 		#endregion
 
