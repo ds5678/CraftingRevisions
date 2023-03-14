@@ -10,10 +10,10 @@ namespace CraftingRevisions
 		/// optional name, used for debugging
 		/// </summary>
 		public string? Name = null;
-		public List<RequiredGearItem> RequiredGear;
+		public List<RequiredGearItem> RequiredGear = new();
 		public string? RequiredTool = null;
 		public List<string>? OptionalTools = new();
-		public string CraftedResult;
+		public string? CraftedResult = null;
 		public int CraftedResultCount = 0;
 		public int DurationMinutes = 0;
 		public string? CraftingAudio = null;
