@@ -24,29 +24,23 @@ namespace CraftingRevisions.Patches
 	{
 		private static void Postfix(Il2CppTLD.Gear.BlueprintManager __instance)
 		{
-			// check we have a HasSet and it has contents
-			if (BlueprintManager.jsonUserBlueprints != null && BlueprintManager.jsonUserBlueprints.Count > 0)
+			// loop over the items
+			foreach (string jsonUserBlueprint in BlueprintManager.jsonUserBlueprints)
 			{
-				// loop over the items
-				foreach (string jsonUserBlueprint in CraftingRevisions.BlueprintManager.jsonUserBlueprints)
+
+				// load the blueprint into the game
+				bool loaded = __instance.LoadUserBlueprint(jsonUserBlueprint);
+
+				if (!loaded)
 				{
-
-					// load the blueprint into the game
-					bool loaded = __instance.LoadUserBlueprint(jsonUserBlueprint);
-
-					if (loaded == false)
-					{
-						// validate the blueprint
-						BlueprintManager.ValidateJsonBlueprint(jsonUserBlueprint);
-					}
+					// validate the blueprint
+					BlueprintManager.ValidateJsonBlueprint(jsonUserBlueprint);
 				}
 			}
 		}
 	}
 
-
-
-	// So these patches are to work around the fact that "UserBlueprintData.MakeRuntimeWwiseEvent" appears to be broken or unfinished
+	// These patches are to work around the fact that "UserBlueprintData.MakeRuntimeWwiseEvent" appears to be currently broken or unfinished
 	[HarmonyPatch(typeof(Il2CppTLD.Gear.UserBlueprintData), nameof(Il2CppTLD.Gear.UserBlueprintData.MakeRuntimeWwiseEvent), new Type[] { typeof(string) })]
 	internal class UserBlueprintData_MakeRuntimeWwiseEvent
 	{
@@ -59,8 +53,7 @@ namespace CraftingRevisions.Patches
 			__result = MakeAudioEvent(eventName);
 			__runOriginal = false;
 		}
-
-		internal static Il2CppAK.Wwise.Event? MakeAudioEvent(string? eventName)
+		private static Il2CppAK.Wwise.Event? MakeAudioEvent(string? eventName)
 		{
 			Il2CppAK.Wwise.Event emptyEvent = new();
 			emptyEvent.WwiseObjectReference = ScriptableObject.CreateInstance<WwiseEventReference>();
@@ -81,7 +74,7 @@ namespace CraftingRevisions.Patches
 			newEvent.WwiseObjectReference.id = eventId;
 			return newEvent;
 		}
-		internal static uint GetAKEventIdFromString(string eventName)
+		private static uint GetAKEventIdFromString(string eventName)
 		{
 			Type type = typeof(Il2CppAK.EVENTS);
 			foreach (PropertyInfo prop in type.GetProperties(BindingFlags.Static | BindingFlags.Public | BindingFlags.Instance))
@@ -93,7 +86,5 @@ namespace CraftingRevisions.Patches
 			}
 			return 0U;
 		}
-
 	}
-
 }

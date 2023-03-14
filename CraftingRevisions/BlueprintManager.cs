@@ -1,5 +1,4 @@
-﻿
-namespace CraftingRevisions
+﻿namespace CraftingRevisions
 {
 	public static class BlueprintManager
 	{
@@ -24,5 +23,5 @@ namespace CraftingRevisions
 
 	}
 
-	
+
 }
