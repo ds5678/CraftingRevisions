@@ -1,8 +1,11 @@
-﻿namespace CraftingRevisions
+﻿using HarmonyLib;
+
+namespace CraftingRevisions
 {
+	[HarmonyPatch]
 	public static class BlueprintManager
 	{
-		internal static HashSet<string> jsonUserBlueprints = new();
+		private static HashSet<string> jsonUserBlueprints = new();
 
 		public static void AddBlueprintFromJson(string text)
 		{
@@ -21,7 +24,24 @@
 			testBluePrint.Validate();
 		}
 
+		// patched into postfix BlueprintManager.LoadAllUserBlueprints
+		// (BlueprintManager.RemoveUserBlueprints is not guaranteed to get called)
+		[HarmonyPostfix]
+		[HarmonyPatch(typeof(Il2CppTLD.Gear.BlueprintManager), nameof(Il2CppTLD.Gear.BlueprintManager.LoadAllUserBlueprints))]
+		private static void BlueprintManager_LoadAllUserBlueprints_Postfix(Il2CppTLD.Gear.BlueprintManager __instance)
+		{
+			// loop over the items
+			foreach (string jsonUserBlueprint in jsonUserBlueprints)
+			{
+				// load the blueprint into the game
+				bool loaded = __instance.LoadUserBlueprint(jsonUserBlueprint);
+
+				if (!loaded)
+				{
+					// validate the blueprint
+					ValidateJsonBlueprint(jsonUserBlueprint);
+				}
+			}
+		}
 	}
-
-
 }

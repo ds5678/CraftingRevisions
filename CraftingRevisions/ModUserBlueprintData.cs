@@ -1,6 +1,6 @@
 ﻿using CraftingRevisions.Exceptions;
 using Il2Cpp;
-using MelonLoader.TinyJSON;
+using System.Text.Json;
 
 namespace CraftingRevisions
 {
@@ -9,35 +9,33 @@ namespace CraftingRevisions
 		/// <summary>
 		/// optional name, used for debugging
 		/// </summary>
-		public string? Name = null;
-		public List<RequiredGearItem> RequiredGear = new();
-		public string? RequiredTool = null;
-		public List<string>? OptionalTools = new();
-		public string? CraftedResult = null;
-		public int CraftedResultCount = 0;
-		public int DurationMinutes = 0;
-		public string? CraftingAudio = null;
-		public float KeroseneLitersRequired = 0;
-		public float GunpowderKGRequired = 0;
-		public bool RequiresLight = false;
-		public bool Locked = false;
-		public bool IgnoreLockInSurvival = true;
-		public bool AppearsInStoryOnly = false;
-		public bool AppearsInSurvivalOnly = false;
-		public SkillType AppliedSkill = SkillType.None;
-		public SkillType ImprovedSkill = SkillType.None;
-		public CraftingLocation RequiredCraftingLocation = CraftingLocation.Anywhere;
-		public bool RequiresLitFire = false;
-		public bool CanIncreaseRepairSkill = false;
+		public string? Name { get; set; } = null;
+		public List<ModRequiredGearItem> RequiredGear { get; set; } = new();
+		public string? RequiredTool { get; set; } = null;
+		public List<string>? OptionalTools { get; set; } = new();
+		public string? CraftedResult { get; set; } = null;
+		public int CraftedResultCount { get; set; } = 0;
+		public int DurationMinutes { get; set; } = 0;
+		public string? CraftingAudio { get; set; } = null;
+		public float KeroseneLitersRequired { get; set; } = 0;
+		public float GunpowderKGRequired { get; set; } = 0;
+		public bool RequiresLight { get; set; } = false;
+		public bool Locked { get; set; } = false;
+		public bool IgnoreLockInSurvival { get; set; } = true;
+		public bool AppearsInStoryOnly { get; set; } = false;
+		public bool AppearsInSurvivalOnly { get; set; } = false;
+		public SkillType AppliedSkill { get; set; } = SkillType.None;
+		public SkillType ImprovedSkill { get; set; } = SkillType.None;
+		public CraftingLocation RequiredCraftingLocation { get; set; } = CraftingLocation.Anywhere;
+		public bool RequiresLitFire { get; set; } = false;
+		public bool CanIncreaseRepairSkill { get; set; } = false;
 
 		#region Json
 		public static ModUserBlueprintData ParseFromJson(string jsonText)
 		{
-			return JSON.Load(jsonText).Make<ModUserBlueprintData>();
+			return JsonSerializer.Deserialize<ModUserBlueprintData>(jsonText);
 		}
 		#endregion
-
-		public string GetName() => Name ?? "";
 
 		#region validation
 		internal void Validate()
@@ -47,44 +45,44 @@ namespace CraftingRevisions
 				var exceptions = new List<Exception>();
 
 				if (RequiredGear == null)
-					exceptions.Add(new InvalidBlueprintException($"\nRequiredGear must be set on '{GetName()}'"));
+					exceptions.Add(new InvalidBlueprintException($"\nRequiredGear must be set on '{Name}'"));
 
 				if (RequiredGear != null && RequiredGear.Count <= 0)
-					exceptions.Add(new InvalidBlueprintException($"\nRequiredGear must not be empty on '{GetName()}'"));
+					exceptions.Add(new InvalidBlueprintException($"\nRequiredGear must not be empty on '{Name}'"));
 
 				if (KeroseneLitersRequired < 0)
-					exceptions.Add(new InvalidBlueprintException($"\nKeroseneLitersRequired cannot be negative on '{GetName()}'"));
+					exceptions.Add(new InvalidBlueprintException($"\nKeroseneLitersRequired cannot be negative on '{Name}'"));
 
 				if (GunpowderKGRequired < 0)
-					exceptions.Add(new InvalidBlueprintException($"\nGunpowderKGRequired cannot be negative on '{GetName()}'"));
+					exceptions.Add(new InvalidBlueprintException($"\nGunpowderKGRequired cannot be negative on '{Name}'"));
 
 				if (string.IsNullOrWhiteSpace(CraftedResult))
-					exceptions.Add(new InvalidBlueprintException($"\nCraftedResult must be set on '{GetName()}'"));
+					exceptions.Add(new InvalidBlueprintException($"\nCraftedResult must be set on '{Name}'"));
 
 				if (CraftedResultCount < 1)
-					exceptions.Add(new InvalidBlueprintException($"\nCraftedResultCount cannot be less than 1 on '{GetName()}'"));
+					exceptions.Add(new InvalidBlueprintException($"\nCraftedResultCount cannot be less than 1 on '{Name}'"));
 
 				if (DurationMinutes < 0)
-					exceptions.Add(new InvalidBlueprintException($"\nDurationMinutes cannot be negative on '{GetName()}'"));
+					exceptions.Add(new InvalidBlueprintException($"\nDurationMinutes cannot be negative on '{Name}'"));
 
 				if (!IsValidEnumValue(RequiredCraftingLocation))
-					exceptions.Add(new InvalidBlueprintException($"\nUnsupported value {RequiredCraftingLocation} for RequiredCraftingLocation on '{GetName()}'"));
+					exceptions.Add(new InvalidBlueprintException($"\nUnsupported value {RequiredCraftingLocation} for RequiredCraftingLocation on '{Name}'"));
 
 				if (!IsValidEnumValue(AppliedSkill))
-					exceptions.Add(new InvalidBlueprintException($"\nUnsupported value {AppliedSkill} for AppliedSkill on '{GetName()}'"));
+					exceptions.Add(new InvalidBlueprintException($"\nUnsupported value {AppliedSkill} for AppliedSkill on '{Name}'"));
 
 				if (!IsValidEnumValue(ImprovedSkill))
-					exceptions.Add(new InvalidBlueprintException($"\nUnsupported value {ImprovedSkill} for RequiredCraftingLocation on '{GetName()}'"));
+					exceptions.Add(new InvalidBlueprintException($"\nUnsupported value {ImprovedSkill} for RequiredCraftingLocation on '{Name}'"));
 
 				if (RequiredGear != null && RequiredGear.Count > 0)
 				{
 					int i = 0;
-					foreach (RequiredGearItem RequiredGearItem in RequiredGear)
+					foreach (ModRequiredGearItem RequiredGearItem in RequiredGear)
 					{
 						if (RequiredGearItem.Item == null)
-							exceptions.Add(new InvalidBlueprintException($"\nRequiredGearItem[{i}].Item must be set on '{GetName()}'"));
+							exceptions.Add(new InvalidBlueprintException($"\nRequiredGearItem[{i}].Item must be set on '{Name}'"));
 						if (RequiredGearItem.Count < 1)
-							exceptions.Add(new InvalidBlueprintException($"\nRequiredGearItem[{i}].Count cannot be less than 1 on '{GetName()}'"));
+							exceptions.Add(new InvalidBlueprintException($"\nRequiredGearItem[{i}].Count cannot be less than 1 on '{Name}'"));
 						i++;
 					}
 				}
@@ -110,17 +108,19 @@ namespace CraftingRevisions
 
 	}
 
-	public class RequiredGearItem
+	public class ModRequiredGearItem
 	{
 		/// <summary>
 		/// String value of the gear item
 		/// </summary>
-		public string? Item = null;
+		public string? Item { get; set; } = null;
 		/// <summary>
 		/// Count of how many are required
 		/// </summary>
-		public int Count = 0;
+		public int Count { get; set; } = 0;
 	}
 }
+
+
 
 
