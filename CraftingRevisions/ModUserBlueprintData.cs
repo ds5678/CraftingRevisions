@@ -37,7 +37,7 @@ namespace CraftingRevisions
 		#region Json
 		public static ModUserBlueprintData ParseFromJson(string jsonText)
 		{
-			return JsonSerializer.Deserialize<ModUserBlueprintData>(jsonText);
+			return JsonSerializer.Deserialize<ModUserBlueprintData>(jsonText) ?? throw new ArgumentException("Could not parse blueprint data from the text.", nameof(jsonText));
 		}
 		#endregion
 
@@ -101,22 +101,5 @@ namespace CraftingRevisions
 			private static readonly T[] values = Enum.GetValues<T>();
 			public static bool Contains(T value) => values.Contains(value);
 		}
-
-	}
-
-	internal sealed class ModRequiredGearItem
-	{
-		/// <summary>
-		/// String value of the gear item
-		/// </summary>
-		public string? Item { get; set; } = null;
-		/// <summary>
-		/// Count of how many are required
-		/// </summary>
-		public int Count { get; set; } = 0;
 	}
 }
-
-
-
-
