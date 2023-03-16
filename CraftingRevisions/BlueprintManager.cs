@@ -1,41 +1,47 @@
-﻿namespace CraftingRevisions
+﻿using HarmonyLib;
+
+namespace CraftingRevisions
 {
+	[HarmonyPatch]
 	public static class BlueprintManager
 	{
-		private static readonly List<ModBlueprintData> pendingBlueprints = new List<ModBlueprintData>();
-		private static bool registeredPendingBlueprints;
+		private static HashSet<string> jsonUserBlueprints = new();
 
-		internal static void RegisterPendingBlueprints()
-		{
-			foreach (var blueprint in pendingBlueprints)
-			{
-				BlueprintMapper.RegisterBlueprint(blueprint);
-			}
-			pendingBlueprints.Clear();
-			registeredPendingBlueprints = true;
-		}
-
-		public static void AddBlueprint(ModBlueprintData blueprint, bool validateEarly)
-		{
-			if (blueprint == null)
-				throw new ArgumentNullException(nameof(blueprint));
-
-			blueprint.PreValidate();
-
-			if (registeredPendingBlueprints || validateEarly)
-				BlueprintMapper.RegisterBlueprint(blueprint);
-			else
-				pendingBlueprints.Add(blueprint);
-		}
-
-		public static void AddBlueprintFromJson(string text, bool validateEarly)
+		public static void AddBlueprintFromJson(string text)
 		{
 			if (string.IsNullOrWhiteSpace(text))
 			{
 				throw new ArgumentException("Blueprint text contains no information", nameof(text));
 			}
 
-			AddBlueprint(ModBlueprintData.ParseFromJson(text), validateEarly);
+			// add the blueprint to the HasSet
+			jsonUserBlueprints.Add(text);
+		}
+
+		internal static void ValidateJsonBlueprint(string json)
+		{
+			ModUserBlueprintData testBluePrint = ModUserBlueprintData.ParseFromJson(json);
+			testBluePrint.Validate();
+		}
+
+		// patched into postfix BlueprintManager.LoadAllUserBlueprints
+		// (BlueprintManager.RemoveUserBlueprints is not guaranteed to get called)
+		[HarmonyPostfix]
+		[HarmonyPatch(typeof(Il2CppTLD.Gear.BlueprintManager), nameof(Il2CppTLD.Gear.BlueprintManager.LoadAllUserBlueprints))]
+		private static void BlueprintManager_LoadAllUserBlueprints_Postfix(Il2CppTLD.Gear.BlueprintManager __instance)
+		{
+			// loop over the items
+			foreach (string jsonUserBlueprint in jsonUserBlueprints)
+			{
+				// load the blueprint into the game
+				bool loaded = __instance.LoadUserBlueprint(jsonUserBlueprint);
+
+				if (!loaded)
+				{
+					// validate the blueprint
+					ValidateJsonBlueprint(jsonUserBlueprint);
+				}
+			}
 		}
 	}
 }

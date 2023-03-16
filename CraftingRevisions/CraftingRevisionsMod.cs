@@ -8,11 +8,5 @@ namespace CraftingRevisions
 		{
 			Settings.instance.AddToModSettings("Crafting Revisions");
 		}
-
-		public override void OnApplicationLateStart()
-		{
-			BlueprintManager.RegisterPendingBlueprints();
-		}
-
 	}
 }

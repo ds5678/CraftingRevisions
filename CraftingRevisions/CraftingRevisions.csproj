@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<!--This is an xml comment. Comments have no impact on compiling.-->
 
 	<PropertyGroup>
