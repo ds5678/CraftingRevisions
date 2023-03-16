@@ -53,19 +53,13 @@ namespace CraftingRevisions.Patches
 				foreach (PropertyInfo prop in type.GetProperties(BindingFlags.Static | BindingFlags.Public))
 				{
 					string key = prop.Name.ToLowerInvariant();
-					uint value = Convert.ToUInt32(prop.GetValue(null).ToString());
+					uint value = (uint)prop.GetValue(null)!;
 					eventIds.Add(key, value);
 				}
 			}
 
-			string eventKey = eventName.ToLowerInvariant();
-
-			if (eventIds.ContainsKey(eventKey))
-			{
-				return eventIds[eventKey];
-			}
-
-			return 0U;
+			eventIds.TryGetValue(eventName.ToLowerInvariant(), out uint id);
+			return id;
 		}
 	}
 }

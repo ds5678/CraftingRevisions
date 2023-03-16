@@ -1,10 +1,11 @@
-﻿using CraftingRevisions.Exceptions;
-using Il2Cpp;
+﻿using Il2Cpp;
+using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace CraftingRevisions
 {
-	public class ModUserBlueprintData
+	internal sealed class ModUserBlueprintData
 	{
 		/// <summary>
 		/// optional name, used for debugging
@@ -24,8 +25,11 @@ namespace CraftingRevisions
 		public bool IgnoreLockInSurvival { get; set; } = true;
 		public bool AppearsInStoryOnly { get; set; } = false;
 		public bool AppearsInSurvivalOnly { get; set; } = false;
+		[JsonConverter(typeof(JsonStringEnumConverter))]
 		public SkillType AppliedSkill { get; set; } = SkillType.None;
+		[JsonConverter(typeof(JsonStringEnumConverter))]
 		public SkillType ImprovedSkill { get; set; } = SkillType.None;
+		[JsonConverter(typeof(JsonStringEnumConverter))]
 		public CraftingLocation RequiredCraftingLocation { get; set; } = CraftingLocation.Anywhere;
 		public bool RequiresLitFire { get; set; } = false;
 		public bool CanIncreaseRepairSkill { get; set; } = false;
@@ -40,75 +44,67 @@ namespace CraftingRevisions
 		#region validation
 		internal void Validate()
 		{
-			try
+			StringBuilder sb = new StringBuilder();
+
+			if (RequiredGear == null)
+				sb.AppendLine($"RequiredGear must be set on '{Name}'");
+
+			if (RequiredGear != null && RequiredGear.Count <= 0)
+				sb.AppendLine($"RequiredGear must not be empty on '{Name}'");
+
+			if (KeroseneLitersRequired < 0)
+				sb.AppendLine($"KeroseneLitersRequired cannot be negative on '{Name}'");
+
+			if (GunpowderKGRequired < 0)
+				sb.AppendLine($"GunpowderKGRequired cannot be negative on '{Name}'");
+
+			if (string.IsNullOrWhiteSpace(CraftedResult))
+				sb.AppendLine($"CraftedResult must be set on '{Name}'");
+
+			if (CraftedResultCount < 1)
+				sb.AppendLine($"CraftedResultCount cannot be less than 1 on '{Name}'");
+
+			if (DurationMinutes < 0)
+				sb.AppendLine($"DurationMinutes cannot be negative on '{Name}'");
+
+			if (!EnumValues<CraftingLocation>.Contains(RequiredCraftingLocation))
+				sb.AppendLine($"Unsupported value {RequiredCraftingLocation} for RequiredCraftingLocation on '{Name}'");
+
+			if (!EnumValues<SkillType>.Contains(AppliedSkill))
+				sb.AppendLine($"Unsupported value {AppliedSkill} for AppliedSkill on '{Name}'");
+
+			if (!EnumValues<SkillType>.Contains(ImprovedSkill))
+				sb.AppendLine($"Unsupported value {ImprovedSkill} for RequiredCraftingLocation on '{Name}'");
+
+			if (RequiredGear != null && RequiredGear.Count > 0)
 			{
-				var exceptions = new List<Exception>();
-
-				if (RequiredGear == null)
-					exceptions.Add(new InvalidBlueprintException($"\nRequiredGear must be set on '{Name}'"));
-
-				if (RequiredGear != null && RequiredGear.Count <= 0)
-					exceptions.Add(new InvalidBlueprintException($"\nRequiredGear must not be empty on '{Name}'"));
-
-				if (KeroseneLitersRequired < 0)
-					exceptions.Add(new InvalidBlueprintException($"\nKeroseneLitersRequired cannot be negative on '{Name}'"));
-
-				if (GunpowderKGRequired < 0)
-					exceptions.Add(new InvalidBlueprintException($"\nGunpowderKGRequired cannot be negative on '{Name}'"));
-
-				if (string.IsNullOrWhiteSpace(CraftedResult))
-					exceptions.Add(new InvalidBlueprintException($"\nCraftedResult must be set on '{Name}'"));
-
-				if (CraftedResultCount < 1)
-					exceptions.Add(new InvalidBlueprintException($"\nCraftedResultCount cannot be less than 1 on '{Name}'"));
-
-				if (DurationMinutes < 0)
-					exceptions.Add(new InvalidBlueprintException($"\nDurationMinutes cannot be negative on '{Name}'"));
-
-				if (!IsValidEnumValue(RequiredCraftingLocation))
-					exceptions.Add(new InvalidBlueprintException($"\nUnsupported value {RequiredCraftingLocation} for RequiredCraftingLocation on '{Name}'"));
-
-				if (!IsValidEnumValue(AppliedSkill))
-					exceptions.Add(new InvalidBlueprintException($"\nUnsupported value {AppliedSkill} for AppliedSkill on '{Name}'"));
-
-				if (!IsValidEnumValue(ImprovedSkill))
-					exceptions.Add(new InvalidBlueprintException($"\nUnsupported value {ImprovedSkill} for RequiredCraftingLocation on '{Name}'"));
-
-				if (RequiredGear != null && RequiredGear.Count > 0)
+				int i = 0;
+				foreach (ModRequiredGearItem RequiredGearItem in RequiredGear)
 				{
-					int i = 0;
-					foreach (ModRequiredGearItem RequiredGearItem in RequiredGear)
-					{
-						if (RequiredGearItem.Item == null)
-							exceptions.Add(new InvalidBlueprintException($"\nRequiredGearItem[{i}].Item must be set on '{Name}'"));
-						if (RequiredGearItem.Count < 1)
-							exceptions.Add(new InvalidBlueprintException($"\nRequiredGearItem[{i}].Count cannot be less than 1 on '{Name}'"));
-						i++;
-					}
+					if (RequiredGearItem.Item == null)
+						sb.AppendLine($"RequiredGearItem[{i}].Item must be set on '{Name}'");
+					if (RequiredGearItem.Count < 1)
+						sb.AppendLine($"RequiredGearItem[{i}].Count cannot be less than 1 on '{Name}'");
+					i++;
 				}
-				throw new AggregateException("Aggregate Exception Message", exceptions);
-
 			}
-			catch (AggregateException ae)
+			if (sb.Length > 0)
 			{
-				MelonLoader.MelonLogger.Error(ae.Message);
+				MelonLoader.MelonLogger.Error(sb.ToString().Trim());
 			}
+
 		}
 		#endregion
 
-		private static T[] GetEnumValues<T>() where T : Enum
+		private static class EnumValues<T> where T : struct, Enum
 		{
-			return (T[])(Enum.GetValues(typeof(T)));
-		}
-
-		private static bool IsValidEnumValue<T>(T value) where T : Enum
-		{
-			return GetEnumValues<T>().Contains(value);
+			private static readonly T[] values = Enum.GetValues<T>();
+			public static bool Contains(T value) => values.Contains(value);
 		}
 
 	}
 
-	public class ModRequiredGearItem
+	internal sealed class ModRequiredGearItem
 	{
 		/// <summary>
 		/// String value of the gear item
